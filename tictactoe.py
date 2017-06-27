@@ -1,5 +1,6 @@
 from copy import deepcopy
 import random
+import sys
 
 
 class State:
@@ -21,7 +22,16 @@ def next_positions(state):
 
 def print_state(state):
     print "Player:" + str(state.turn)
-    print state.board
+    for row in state.board:
+        s = ''
+        for val in row:
+            if val is None:
+                s += ' - '
+            else:
+                s += ' ' + str(val) + ' '
+        print s + '\n'
+
+
 
 
 def player_move(state, pos):
@@ -40,22 +50,18 @@ def player_move(state, pos):
 # choose next moves on the board with highest score
 # b = np.matrix([[None, None, None],[None, None, None],[None,None, None]])
 
+# choose minimum from oponents move
+#     >> (he always picks the worst for you)
+# choose maximum from your move
+
+
+def min_max(s, score=0):
+    pass
+
 
 def random_move(s):
     nps = next_positions(s)
     return nps[int(random.random()*len(nps))]
-
-    # loops = [
-    #     [0, 0], [0, 1], [0, 2],
-    #     [1, 0], [1, 1], [1, 2],
-    #     [2, 0], [2, 1],  [2, 2]
-    # ]
-    # steps = int(random.random()*9)
-    # while s.board[loops[steps % 9][0]][loops[steps % 9][1]] is not None:
-    #     steps += 1
-    #
-    # s.board[loops[steps][0]][loops[steps][1]] = 2
-    return s
 
 
 def computer_move(s, kind='random'):
@@ -66,33 +72,64 @@ def computer_move(s, kind='random'):
 
 
 def did_win(s):
-
-    if (s.board[2][0] == s.board[1][1] and s.board[0][2] == s.board[2][0]):
+    if (s.board[2][0] is not None) and (s.board[2][0] == s.board[1][1] and s.board[0][2] == s.board[2][0]):
         return True
-    if (s.board[0][0] == s.board[1][1] and s.board[2][2] == s.board[0][0]):
+    if (s.board[0][0] is not None) and (s.board[0][0] == s.board[1][1] and s.board[2][2] == s.board[0][0]):
         return True
     for i in range(3):
-        if (s.board[i][0] == s.board[i][1] and s.board[i][0] == s.board[i][2]):
+        # rows
+        if (s.board[i][0] is not None) and (s.board[i][0] == s.board[i][1] and s.board[i][0] == s.board[i][2]):
             return True
-        if (s.board[0][i] == s.board[1][i] and s.board[0][i] == s.board[2][i]):
+        # columns
+        if (s.board[0][i] is not None) and (s.board[0][i] == s.board[1][i] and s.board[0][i] == s.board[2][i]):
             return True
-        return False
+    return False
 
 
-s = State([
-    [1, 1, None],
-    [1, 1, None],
-    [0, None, None]], 1)
-print_state(s)
-np = next_positions(s)
-[print_state(n) for n in np]
-print "test win"
-print did_win(s)
+def stale_mate(s):
+    if len(next_positions(s)) == 0:
+        return True
 
-print "random move"
-print_state(s)
-s = random_move(s)
-print print_state(s)
-print print_state(random_move(s))
+
+def play_game():
+    # create board
+    s = State([
+        [None, None, None],
+        [None, None, None],
+        [None, None, None]], 1)
+    print_state(s)
+    print did_win(s)
+    while not did_win(s) and not stale_mate(s):
+        # prompt player
+        position = raw_input("Enter position: ")
+        x, y = position.split(",")
+        s = player_move(s, [int(x), int(y)])
+        print_state(s)
+        if did_win(s) or stale_mate(s):
+            break
+        # make computer move
+        s = computer_move(s)
+        print_state(s)
+    if stale_mate(s):
+        print "nobody won!"
+    else:
+        print "player {} won!".format(s.turn)
+
+play_game()
+# s = State([
+#     [1, 1, None],
+#     [1, 1, None],
+#     [0, None, None]], 1)
+# print_state(s)
+# np = next_positions(s)
+# [print_state(n) for n in np]
+# print "test win"
+# print did_win(s)
+#
+# print "random move"
+# print_state(s)
+# s = random_move(s)
+# print print_state(s)
+# print print_state(random_move(s))
 # print "test next pos"
 # print next_positions(s)

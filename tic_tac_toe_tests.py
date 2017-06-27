@@ -1,5 +1,5 @@
 import unittest
-import andrei_challenge_3 as tictactoe
+import tictactoe as tictactoe
 
 
 class TestTicTacToe(unittest.TestCase):
@@ -9,6 +9,14 @@ class TestTicTacToe(unittest.TestCase):
             [1, 1, None],
             [1, 1, None],
             [1, None, None]], 1)
+
+        self.assertEqual(tictactoe.did_win(s), True)
+
+    def test_first_row_player_one_wins(self):
+        s = tictactoe.State([
+            [1, 1, None],
+            [1, 1, 1],
+            [None, None, None]], 0)
 
         self.assertEqual(tictactoe.did_win(s), True)
 
@@ -49,6 +57,14 @@ class TestTicTacToe(unittest.TestCase):
             [2, 1, None],
             [1, 2, None],
             [2, None, None]], 1)
+
+        self.assertEqual(tictactoe.did_win(s), False)
+
+    def test_empty_board_noone_wins(self):
+        s = tictactoe.State([
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]], 1)
 
         self.assertEqual(tictactoe.did_win(s), False)
 
