@@ -82,11 +82,14 @@ def best_move(s):
     bestMove = None
     bestMoveScore = -1001
     for b in next_positions(s):
-        print_state(b)
         print minimax(b, 3, False)
+        print_state(b)
         # maximizing player is False because we maximize for the computer
-        if minimax(b, 3, False) > bestMoveScore:
+        score = minimax(b, 3, False)
+        if score > bestMoveScore:
             bestMove = b
+            bestMoveScore = score
+
     return bestMove
 
 
@@ -151,7 +154,7 @@ def play_game():
 s = State([
     [None, 0, 0],
     [None, 1, 0],
-    [None, None, 1]], 0)
+    [None, None, 1]], 1)
 x = best_move(s)
 print_state(x)
 # np = next_positions(s)
