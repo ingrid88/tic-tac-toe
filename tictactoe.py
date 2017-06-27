@@ -32,8 +32,6 @@ def print_state(state):
         print s + '\n'
 
 
-
-
 def player_move(state, pos):
     i, j = pos
     b = State(deepcopy(state.board), 1 - state.turn)
@@ -55,8 +53,37 @@ def player_move(state, pos):
 # choose maximum from your move
 
 
-def min_max(s, score=0):
-    pass
+def minimax(node, depth, maximizing_player):
+    if stale_mate(node):
+        return 0
+    if did_win(node) and maximizing_player:
+        return -1000
+    if did_win(node) and not maximizing_player:
+        return 1000
+
+    if maximizing_player:
+        bestValue = -1000
+        for child in next_positions(node):
+            v = minimax(child, depth - 1, False)
+            bestValue = max(bestValue, v)
+        return bestValue
+
+    else:
+        bestValue = 1000
+        for child in next_positions(node):
+            v = minimax(child, depth - 1, True)
+            bestValue = min(bestValue, v)
+        return bestValue
+
+
+def best_move(s):
+    bestMove = None
+    bestMoveScore = 0
+    for b in next_positions(s):
+        # maximizing player is False because we maximize for the computer
+        if minimax(b, 3, False) > bestMoveScore:
+            bestMove = b
+    return bestMove
 
 
 def random_move(s):
@@ -67,8 +94,9 @@ def random_move(s):
 def computer_move(s, kind='random'):
     if kind == 'random':
         return random_move(s)
-    else:
-        return s
+
+    elif kind == 'minimax':
+        return best_move(s)
 
 
 def did_win(s):
@@ -108,7 +136,7 @@ def play_game():
         if did_win(s) or stale_mate(s):
             break
         # make computer move
-        s = computer_move(s)
+        s = computer_move(s, kind='minimax')
         print_state(s)
     if stale_mate(s):
         print "nobody won!"
