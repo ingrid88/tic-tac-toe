@@ -40,6 +40,7 @@ def player_move(state, pos):
     b.board[i][j] = state.turn
     return b
 
+
 # Calculate all possible routes
 # and assign a score to all the potential end games
 #     - (- to loss and + to win)
@@ -47,12 +48,6 @@ def player_move(state, pos):
 #     - (closer to now is more negative)
 # choose next moves on the board with highest score
 # b = np.matrix([[None, None, None],[None, None, None],[None,None, None]])
-
-# choose minimum from oponents move
-#     >> (he always picks the worst for you)
-# choose maximum from your move
-
-
 def minimax(node, depth, maximizing_player):
     if stale_mate(node):
         return 0
@@ -82,14 +77,12 @@ def best_move(s):
     bestMove = None
     bestMoveScore = -1001
     for b in next_positions(s):
-        print minimax(b, 3, False)
-        print_state(b)
-        # maximizing player is False because we maximize for the computer
+        # print minimax(b, 3, False)
+        # print_state(b)
         score = minimax(b, 3, False)
         if score > bestMoveScore:
             bestMove = b
             bestMoveScore = score
-
     return bestMove
 
 
@@ -148,24 +141,6 @@ def play_game():
     if stale_mate(s):
         print "nobody won!"
     else:
-        print "player {} won!".format(s.turn)
+        print "player {} won!".format(1 - s.turn)
 
-# play_game()
-s = State([
-    [None, 0, 0],
-    [None, 1, 0],
-    [None, None, 1]], 1)
-x = best_move(s)
-print_state(x)
-# np = next_positions(s)
-# [print_state(n) for n in np]
-# print "test win"
-# print did_win(s)
-#
-# print "random move"
-# print_state(s)
-# s = random_move(s)
-# print print_state(s)
-# print print_state(random_move(s))
-# print "test next pos"
-# print next_positions(s)
+play_game()
