@@ -66,6 +66,7 @@ def minimax(node, depth, maximizing_player):
         for child in next_positions(node):
             v = minimax(child, depth - 1, False)
             bestValue = max(bestValue, v)
+        # print "best" + str(bestValue)
         return bestValue
 
     else:
@@ -73,13 +74,16 @@ def minimax(node, depth, maximizing_player):
         for child in next_positions(node):
             v = minimax(child, depth - 1, True)
             bestValue = min(bestValue, v)
+        # print "vest" + str(bestValue)
         return bestValue
 
 
 def best_move(s):
     bestMove = None
-    bestMoveScore = 0
+    bestMoveScore = -1001
     for b in next_positions(s):
+        print_state(b)
+        print minimax(b, 3, False)
         # maximizing player is False because we maximize for the computer
         if minimax(b, 3, False) > bestMoveScore:
             bestMove = b
@@ -143,12 +147,13 @@ def play_game():
     else:
         print "player {} won!".format(s.turn)
 
-play_game()
-# s = State([
-#     [1, 1, None],
-#     [1, 1, None],
-#     [0, None, None]], 1)
-# print_state(s)
+# play_game()
+s = State([
+    [None, 0, 0],
+    [None, 1, 0],
+    [None, None, 1]], 0)
+x = best_move(s)
+print_state(x)
 # np = next_positions(s)
 # [print_state(n) for n in np]
 # print "test win"
